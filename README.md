@@ -34,7 +34,7 @@ REST API сервис для учёта и управления инцидент
 - 📚 **Автоматическая документация** API (Swagger/ReDoc)
 - 🐳 **Docker & Docker Compose** поддержка
 - 🔄 **Автоматические миграции** базы данных (Alembic)
-- ✅ **100% покрытие тестами** с использованием pytest
+- ✅ **Покрытие тестами** с использованием pytest
 - 🚀 **CI/CD pipeline** с GitHub Actions
 - 🏗️ **Clean Architecture** с разделением на слои
 - 🎯 **SOLID принципы** и Domain-Driven Design
