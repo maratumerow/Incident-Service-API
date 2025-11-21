@@ -1,0 +1,59 @@
+# ============================================================================
+# PRE-COMMIT КОНФИГУРАЦИЯ
+# ============================================================================
+# Этот файл настраивает автоматические проверки кода перед коммитом
+
+repos:
+  # Общие проверки файлов
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace        # Удаляет пробелы в конце строк
+      - id: end-of-file-fixer            # Добавляет перенос строки в конец файла
+      - id: check-yaml                 # Проверяет синтаксис YAML файлов
+      - id: check-toml                 # Проверяет синтаксис TOML файлов
+      - id: check-json                 # Проверяет синтаксис JSON файлов
+      - id: check-added-large-files     # Предотвращает добавление больших файлов
+      - id: check-case-conflict         # Проверяет конфликты регистра имен файлов
+      - id: check-merge-conflict        # Проверяет незавершенные merge конфликты
+      - id: debug-statements           # Находит отладочные операторы (pdb, ipdb)
+
+  # Ruff - линтер и форматтер для Python
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.9
+    hooks:
+      - id: ruff                                # Проверка кода с помощью Ruff
+        args: [--fix, --config, tools/ruff.toml]  # Автоматически исправляет ошибки
+        files: ^app/.*\.py$                      # Только Python файлы в app/
+      - id: ruff-format                         # Форматирование кода с помощью Ruff
+        args: [--config, tools/ruff.toml]        # Используем внешнюю конфигурацию
+        files: ^app/.*\.py$                      # Только Python файлы в app/
+
+  # MyPy - проверка типов
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.17.1
+    hooks:
+      - id: mypy                                # Статическая проверка типов
+        args: [--config-file, tools/mypy.ini]     # Используем внешнюю конфигурацию
+        additional_dependencies:                # Дополнительные зависимости для MyPy
+          - types-PyYAML
+          - fastapi
+          - pydantic_settings
+          - pydantic
+          - sqlalchemy
+          - beanie
+          - motor
+          - dependency_injector
+          - langchain
+          - langchain_anthropic
+        files: ^app/.*\.py$
+
+  # Ty - альтернативная быстрая проверка типов
+  - repo: local
+    hooks:
+      - id: ty                                            # Проверка типов с помощью Ty
+        name: ty
+        entry: uv run ty check --config-file tools/ty.toml  # Команда для запуска Ty
+        language: system                                  # Использовать системную команду
+        files: ^app/.*\.py$                                # Только Python файлы в app/
+        pass_filenames: false                              # Не передавать имена файлов, проверять всё app/
